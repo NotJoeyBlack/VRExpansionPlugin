@@ -100,11 +100,11 @@ public:
 	//static get socket compoonent
 
 	//Axis to mirror on for this socket
-	UPROPERTY(EditDefaultsOnly, Category = "Hand Socket Data|Mirroring|Advanced")
+	UPROPERTY(EditDefaultsOnly, Category = "Mirror Settings")
 		TEnumAsByte<EVRAxis::Type> MirrorAxis;
 
 	// Axis to flip on when mirroring this socket
-	UPROPERTY(VisibleDefaultsOnly, Category = "Hand Socket Data|Mirroring|Advanced")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Mirror Settings")
 		TEnumAsByte<EVRAxis::Type> FlipAxis;
 
 	// Relative placement of the hand to this socket
@@ -129,7 +129,7 @@ public:
 		bool bLeftHandDominant;
 
 	// If true we will mirror ourselves automatically for the off hand
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hand Socket Data|Mirroring", meta = (DisplayName = "Flip For Off Hand"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mirror Settings", meta = (DisplayName = "Flip For Left Hand"))
 		bool bFlipForLeftHand;
 
 	// If true, when we mirror the hand socket it will only mirror rotation, not position
