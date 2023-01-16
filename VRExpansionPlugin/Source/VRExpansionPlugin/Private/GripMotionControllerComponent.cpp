@@ -139,6 +139,7 @@ UGripMotionControllerComponent::UGripMotionControllerComponent(const FObjectInit
 	//Hand = EControllerHand::Left;
 	bDisableLowLatencyUpdate = false;
 	bHasAuthority = false;
+	bIgnoreTrackingStatus = false;
 	bUseWithoutTracking = false;
 	ClientAuthConflictResolutionMethod = EVRClientAuthConflictResolutionMode::VRGRIP_CONFLICT_First;
 	bAlwaysSendTickGrip = false;
@@ -1663,7 +1664,7 @@ bool UGripMotionControllerComponent::GripActor(
 				}
 			}
 
-			if (bIsLocalGrip && GetNetMode() == ENetMode::NM_Client && !IsTornOff())
+			if (bIsLocalGrip && GetNetMode() == ENetMode::NM_Client && !IsTornOff() && newActorGrip.GripMovementReplicationSetting == EGripMovementReplicationSettings::ClientSide_Authoritive)
 			{
 				Index = LocallyGrippedObjects.IndexOfByKey(newActorGrip.GripID);
 				if (Index != INDEX_NONE)
@@ -1917,7 +1918,7 @@ bool UGripMotionControllerComponent::GripComponent(
 				}
 			}
 
-			if (bIsLocalGrip && GetNetMode() == ENetMode::NM_Client && !IsTornOff())
+			if (bIsLocalGrip && GetNetMode() == ENetMode::NM_Client && !IsTornOff() && newComponentGrip.GripMovementReplicationSetting == EGripMovementReplicationSettings::ClientSide_Authoritive)
 			{
 				Index = LocallyGrippedObjects.IndexOfByKey(newComponentGrip.GripID);
 				if (Index != INDEX_NONE)
@@ -4493,7 +4494,7 @@ void UGripMotionControllerComponent::UpdateTracking(float DeltaTime)
 			ETrackingStatus LastTrackingStatus = CurrentTrackingStatus;
 			const bool bNewTrackedState = GripPollControllerState(Position, Orientation, WorldToMeters);
 
-			bTracked = bNewTrackedState && CurrentTrackingStatus != ETrackingStatus::NotTracked;
+			bTracked = bNewTrackedState && (bIgnoreTrackingStatus || CurrentTrackingStatus != ETrackingStatus::NotTracked);
 			if (bTracked)
 			{
 				if (bSmoothHandTracking)
@@ -6935,7 +6936,7 @@ bool UGripMotionControllerComponent::GripPollControllerState(FVector& Position, 
 			if (bIsInGameThread)
 			{
 				CurrentTrackingStatus = MotionController->GetControllerTrackingStatus(PlayerIndex, MotionSource);
-				if (CurrentTrackingStatus == ETrackingStatus::NotTracked)
+				if (!bIgnoreTrackingStatus && CurrentTrackingStatus == ETrackingStatus::NotTracked)
 					continue;
 			}
 

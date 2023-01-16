@@ -552,9 +552,7 @@ public:
 		int HandleIndex = 0;
 		if (GetPhysicsGripIndex(GripInfo, HandleIndex))
 		{
-
-			DestroyPhysicsHandle(&PhysicsGrips[HandleIndex]);
-			PhysicsGrips.RemoveAt(HandleIndex);
+			DestroyPhysicsHandle(GripInfo);
 		}
 
 		// Grip Type or replication was changed
@@ -1357,6 +1355,10 @@ public:
 	// Removes a secondary attachment point from a grip
 	UFUNCTION(BlueprintCallable, Category = "GripMotionController")
 		bool RemoveSecondaryAttachmentFromGripByID(const uint8 GripID = 0, float LerpToTime = 0.25f);
+
+	// If this is true the controller will always attempt to get the current tracking information, regardless of it TrackingStatus is Untracked or not
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GripMotionController")
+		bool bIgnoreTrackingStatus;
 
 	// This is for testing, setting it to true allows you to test grip with a non VR enabled pawn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GripMotionController")
