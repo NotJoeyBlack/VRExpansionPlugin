@@ -171,14 +171,17 @@ public:
 
 	// The grip script that defines the default behaviors of grips
 	// Don't edit this unless you really know what you are doing, leave it empty
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GripMotionController|Advanced")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GripMotionController|Advanced")
 		TSubclassOf<class UVRGripScriptBase> DefaultGripScriptClass;
 	
 	// This is the pointer to the default grip script
 	// It is here to access so if you want to set some variables on your override then you can
 	// Due to a bug with instanced variables and parent classes you can't directly edit this in subclass in the details panel
-	UPROPERTY(VisibleAnywhere, Transient, BlueprintReadOnly, Category = "GripMotionController|Advanced")
+	UPROPERTY(VisibleDefaultsOnly, Transient, BlueprintReadOnly, Category = "GripMotionController|Advanced")
 		TObjectPtr<UVRGripScriptBase> DefaultGripScript;
+
+	// This is a pointer to be able to access the display component directly in c++
+	TWeakObjectPtr<const UPrimitiveComponent> DisplayComponentReference;
 
 	// Lerping functions and events
 	void InitializeLerpToHand(FBPActorGripInformation& GripInfo);
